@@ -141,6 +141,7 @@ class WechatBasic(WechatBase):
         :raises ParseError: 解析微信服务器数据错误, 数据不合法
         """
         result = {}
+
         if isinstance(data, six.text_type):  # unicode to str(PY2), str to bytes(PY3)
             data = data.encode('utf-8')
 
@@ -164,8 +165,10 @@ class WechatBasic(WechatBase):
         result['type'] = result.pop('MsgType').lower()
 
         message_type = MESSAGE_TYPES.get(result['type'], UnknownMessage)
-        self.__message = message_type(result)
+        message = message_type(result)
+        self.__message = message
         self.__is_parse = True
+        return message
 
     @property
     def message(self):
